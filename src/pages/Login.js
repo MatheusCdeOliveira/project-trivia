@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { addEmail, addName } from '../Redux/actions';
 
 class Login extends Component {
   state = {
@@ -30,6 +32,10 @@ class Login extends Component {
   };
 
   handleCLick = async () => {
+    const { dispatch } = this.props;
+    const { inputName, inputEmail } = this.state;
+    dispatch(addEmail(inputEmail));
+    dispatch(addName(inputName));
     const token = await this.getAPI();
     localStorage.setItem('token', token);
     this.setState({ redirect: true });
@@ -92,4 +98,4 @@ Login.propTypes = {
   push: PropTypes.func,
 }.isRequired;
 
-export default Login;
+export default connect()(Login);
