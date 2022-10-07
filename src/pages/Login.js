@@ -22,14 +22,16 @@ class Login extends Component {
   };
 
   getAPI = async () => {
-    const url = '';
-    const response = await fetch(url);
+    const response = await fetch(
+      'https://opentdb.com/api_token.php?command=request',
+    );
     const data = await response.json();
-    return data;
+    return data.token;
   };
 
-  handleCLick = () => {
-    this.getAPI();
+  handleCLick = async () => {
+    const token = await this.getAPI();
+    localStorage.setItem('token', token);
     this.setState({ redirect: true });
   };
 
@@ -65,12 +67,12 @@ class Login extends Component {
             />
           </label>
           <button
-            type="submit"
+            type="button"
             onClick={ this.handleCLick }
             disabled={ isDisabled }
             data-testid="btn-play"
           >
-            Jogar
+            Play
           </button>
           <button
             type="button"
@@ -78,7 +80,6 @@ class Login extends Component {
             onClick={ this.handleSettings }
           >
             Settings
-
           </button>
         </form>
       </div>
