@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 class Login extends Component {
   state = {
@@ -30,6 +31,11 @@ class Login extends Component {
   handleCLick = () => {
     this.getAPI();
     this.setState({ redirect: true });
+  };
+
+  handleSettings = () => {
+    const { history } = this.props;
+    history.push('/settings');
   };
 
   render() {
@@ -66,10 +72,23 @@ class Login extends Component {
           >
             Jogar
           </button>
+          <button
+            type="button"
+            data-testid="btn-settings"
+            onClick={ this.handleSettings }
+          >
+            Settings
+
+          </button>
         </form>
       </div>
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.shape({}),
+  push: PropTypes.func,
+}.isRequired;
 
 export default Login;
