@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 class Login extends Component {
   state = {
@@ -21,15 +22,22 @@ class Login extends Component {
   };
 
   getAPI = async () => {
-    const url = '';
-    const response = await fetch(url);
+    const response = await fetch(
+      'https://opentdb.com/api_token.php?command=request',
+    );
     const data = await response.json();
-    return data;
+    return data.token;
   };
 
-  handleCLick = () => {
-    this.getAPI();
+  handleCLick = async () => {
+    const token = await this.getAPI();
+    localStorage.setItem('token', token);
     this.setState({ redirect: true });
+  };
+
+  handleSettings = () => {
+    const { history } = this.props;
+    history.push('/settings');
   };
 
   render() {
@@ -59,17 +67,29 @@ class Login extends Component {
             />
           </label>
           <button
-            type="submit"
+            type="button"
             onClick={ this.handleCLick }
             disabled={ isDisabled }
             data-testid="btn-play"
           >
-            Jogar
+            Play
+          </button>
+          <button
+            type="button"
+            data-testid="btn-settings"
+            onClick={ this.handleSettings }
+          >
+            Settings
           </button>
         </form>
       </div>
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.shape({}),
+  push: PropTypes.func,
+}.isRequired;
 
 export default Login;
