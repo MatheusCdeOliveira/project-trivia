@@ -10,10 +10,24 @@ class Games extends Component {
     index: 0,
     correctAnswer: '',
     answered: false,
+    timer: 30,
   };
 
   componentDidMount() {
     this.getQuiz();
+    const SECOND = 1000;
+    const timer = setInterval(() => {
+      this.setState((prevState) => {
+        if (prevState.timer === 1) {
+          clearInterval(timer);
+          return {
+            timer: prevState.timer - 1,
+            answered: true,
+          };
+        }
+        return { timer: prevState.timer - 1 };
+      });
+    }, SECOND);
   }
 
   getAnswers = () => {
@@ -45,11 +59,12 @@ class Games extends Component {
   };
 
   render() {
-    const { responseAPI, answers, index, correctAnswer, answered } = this.state;
+    const { responseAPI, answers, index, correctAnswer, answered, timer } = this.state;
     return (
       <>
         <Header />
         <img src={ trivia } alt="header-Img" width="600" height="200" />
+        <p>{ timer }</p>
         {responseAPI.length > 0
           && (
             <div>
@@ -65,6 +80,7 @@ class Games extends Component {
                       onClick={ this.handleAnswerButt }
                       className={ correctAnswer === answer
                         ? 'correctanswer' : 'wronganswer' }
+                      disabled
                     >
                       { answer }
                     </button>
