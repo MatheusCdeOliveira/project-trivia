@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import trivia from '../trivia.png';
 
+const SECOND = 1000;
+
 class Games extends Component {
   state = {
     responseAPI: {},
@@ -15,20 +17,25 @@ class Games extends Component {
 
   componentDidMount() {
     this.getQuiz();
-    const SECOND = 1000;
-    const timer = setInterval(() => {
-      this.setState((prevState) => {
-        if (prevState.timer === 1) {
-          clearInterval(timer);
-          return {
-            timer: prevState.timer - 1,
-            answered: true,
-          };
-        }
-        return { timer: prevState.timer - 1 };
-      });
-    }, SECOND);
+    this.cronometro();
   }
+
+  cronometro = () => {
+    this.setState({ timer: 30 }, () => {
+      const idInterval = setInterval(() => {
+        this.setState((prevState) => ({
+          answered: false,
+          timer: prevState.timer - 1,
+        }), () => {
+          const { timer } = this.state;
+          if (timer === 0) {
+            clearInterval(idInterval);
+            this.setState({ answered: true });
+          }
+        });
+      }, SECOND);
+    });
+  };
 
   getAnswers = () => {
     const { responseAPI, index } = this.state;
@@ -56,6 +63,7 @@ class Games extends Component {
 
   handleAnswerButt = () => {
     this.setState({ answered: true });
+    this.cronometro();
   };
 
   render() {
