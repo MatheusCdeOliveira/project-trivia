@@ -27,7 +27,11 @@ class Header extends Component {
           src={ profileImg }
           alt="profile-img"
         />
-        <h2 data-testid="header-score">{score}</h2>
+        <h2 data-testid="header-score">
+          Score:
+          {' '}
+          {score}
+        </h2>
       </header>
     );
   }

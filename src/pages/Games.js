@@ -1,39 +1,48 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Header from '../components/Header';
 import trivia from '../trivia.png';
+import { addScore } from '../Redux/actions';
 
 const SECOND = 1000;
+const SCORE = 10;
+const EASY = 1;
+const MEDIUM = 2;
+const HARD = 3;
 
 class Games extends Component {
   state = {
+    index: 0,
     responseAPI: {},
     answers: [],
-    index: 0,
     correctAnswer: '',
     answered: false,
     timer: 30,
+    idInterval: 0,
   };
 
   componentDidMount() {
     this.getQuiz();
-    this.cronometro();
+    this.resetTimer();
   }
 
-  cronometro = () => {
-    this.setState({ timer: 30 }, () => {
-      const idInterval = setInterval(() => {
+  resetTimer = () => {
+    const { idInterval } = this.state;
+    if (idInterval) clearInterval(idInterval);
+    this.setState({ timer: 30, answered: false }, () => {
+      const thisIdInterval = setInterval(() => {
         this.setState((prevState) => ({
-          answered: false,
           timer: prevState.timer - 1,
         }), () => {
           const { timer } = this.state;
           if (timer === 0) {
-            clearInterval(idInterval);
+            clearInterval(thisIdInterval);
             this.setState({ answered: true });
           }
         });
       }, SECOND);
+      this.setState({ idInterval: thisIdInterval });
     });
   };
 
@@ -61,10 +70,26 @@ class Games extends Component {
     });
   };
 
-  handleAnswerButt = () => {
-    this.setState({ answered: true });
-    this.cronometro();
+  handleAnswerButt = (answer) => {
+    const { dispatch } = this.props;
+    const { correctAnswer, responseAPI, index, timer, idInterval } = this.state;
+    const { difficulty } = responseAPI[index];
+    const difficultyValue = this.calculateScore(timer, difficulty);
+    this.setState({ answered: true }, () => {
+      clearInterval(idInterval);
+      if (answer === correctAnswer) dispatch(addScore(difficultyValue));
+    });
   };
+
+  calculateScore = (timer, difficulty) => {
+    if (difficulty === 'easy') return SCORE + (timer * EASY);
+    if (difficulty === 'medium') return SCORE + (timer * MEDIUM);
+    if (difficulty === 'hard') return SCORE + (timer * HARD);
+  };
+
+  // this.setState((prevState) => ({ index: prevState.index + 1 }), () => {
+  //   this.resetTimer();
+  // });
 
   render() {
     const { responseAPI, answers, index, correctAnswer, answered, timer } = this.state;
@@ -85,7 +110,6 @@ class Games extends Component {
                       data-testid={ correctAnswer === answer
                         ? 'correct-answer' : `wrong-answer-${i}` }
                       type="button"
-                      onClick={ this.handleAnswerButt }
                       className={ correctAnswer === answer
                         ? 'correctanswer' : 'wronganswer' }
                       disabled
@@ -100,7 +124,7 @@ class Games extends Component {
                       data-testid={ correctAnswer === answer
                         ? 'correct-answer' : `wrong-answer-${i}` }
                       type="button"
-                      onClick={ this.handleAnswerButt }
+                      onClick={ () => this.handleAnswerButt(answer) }
                     >
                       { answer }
                     </button>
@@ -118,4 +142,4 @@ Games.propTypes = {
   push: PropTypes.func,
 }.isRequired;
 
-export default Games;
+export default connect()(Games);
