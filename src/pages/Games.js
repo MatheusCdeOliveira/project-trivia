@@ -10,6 +10,7 @@ const SCORE = 10;
 const EASY = 1;
 const MEDIUM = 2;
 const HARD = 3;
+const MAX_QUESTIONS = 4;
 
 class Games extends Component {
   state = {
@@ -88,6 +89,9 @@ class Games extends Component {
   };
 
   handleNextButt = () => {
+    const { index } = this.state;
+    const { history } = this.props;
+    if (index === MAX_QUESTIONS) history.push('/feedback');
     this.setState((prevState) => ({ index: prevState.index + 1 }), () => {
       this.resetTimer();
     });

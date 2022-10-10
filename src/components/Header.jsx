@@ -28,8 +28,6 @@ class Header extends Component {
           alt="profile-img"
         />
         <h2 data-testid="header-score">
-          Score:
-          {' '}
           {score}
         </h2>
       </header>
