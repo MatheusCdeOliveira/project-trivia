@@ -1,18 +1,27 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Header from '../components/Header';
 
 class Ranking extends Component {
+  state = {
+    ranking: [],
+  };
+
+  componentDidMount() {
+    const ranking = JSON.parse(localStorage.getItem('ranking'));
+    this.setState({ ranking });
+    console.log(ranking);
+  }
+
   home = () => {
     const { history } = this.props;
     history.push('/');
   };
 
   render() {
+    const { ranking } = this.state;
     return (
       <>
-        <Header />
         <h1 data-testid="ranking-title">Ranking</h1>
         <button
           type="button"
@@ -22,6 +31,15 @@ class Ranking extends Component {
           Inicio
 
         </button>
+        <section>
+          {ranking.map((element, index) => (
+            <div name={ element.score } key={ index }>
+              <p data-testid={ `player-name-${index}` }>{element.name}</p>
+              <p data-testid={ `player-score-${index}` }>{element.score}</p>
+              <img src={ element.picture } alt={ element.name } />
+            </div>
+          )).sort((a, b) => b.props.name - a.props.name)}
+        </section>
       </>
     );
   }

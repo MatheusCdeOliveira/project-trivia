@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { addEmail, addName } from '../Redux/actions';
+import { addEmail, addName, resetGame } from '../Redux/actions';
 
 class Login extends Component {
   state = {
@@ -11,6 +11,11 @@ class Login extends Component {
     isDisabled: true,
     redirect: false,
   };
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(resetGame());
+  }
 
   handleChange = ({ target }) => {
     const { name, value } = target;

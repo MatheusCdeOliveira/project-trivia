@@ -1,20 +1,27 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import md5 from 'crypto-js/md5';
 import Header from '../components/Header';
-import { resetGame } from '../Redux/actions';
 
 const MINIMUN_ASSERTIONS = 3;
 
 class Feedback extends Component {
   resetAll = () => {
-    const { dispatch, history } = this.props;
-    dispatch(resetGame());
+    const { history } = this.props;
     history.push('/');
   };
 
   showRanking = () => {
-    const { history } = this.props;
+    const { history, name, score, email } = this.props;
+    const hash = md5(email).toString();
+    const currentRanking = {
+      name,
+      score,
+      picture: `https://www.gravatar.com/avatar/${hash}`,
+    };
+    const getOldRank = JSON.parse(localStorage.getItem('ranking')) || [];
+    localStorage.setItem('ranking', JSON.stringify([...getOldRank, currentRanking]));
     history.push('/ranking');
   };
 
@@ -53,11 +60,15 @@ class Feedback extends Component {
 const mapStateToProps = (state) => ({
   assertions: state.player.assertions,
   score: state.player.score,
+  name: state.player.name,
+  email: state.player.gravatarEmail,
 });
 
 Feedback.propTypes = {
   assertions: PropTypes.number.isRequired,
   score: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
