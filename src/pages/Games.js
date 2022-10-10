@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Header from '../components/Header';
 import trivia from '../trivia.png';
-import { addScore } from '../Redux/actions';
+import { addAssertion, addScore } from '../Redux/actions';
 
 const SECOND = 1000;
 const SCORE = 10;
@@ -75,10 +75,13 @@ class Games extends Component {
     const { dispatch } = this.props;
     const { correctAnswer, responseAPI, index, timer, idInterval } = this.state;
     const { difficulty } = responseAPI[index];
-    const difficultyValue = this.calculateScore(timer, difficulty);
+    const scoreValue = this.calculateScore(timer, difficulty);
     this.setState({ answered: true }, () => {
       clearInterval(idInterval);
-      if (answer === correctAnswer) dispatch(addScore(difficultyValue));
+      if (answer === correctAnswer) {
+        dispatch(addScore(scoreValue));
+        dispatch(addAssertion());
+      }
     });
   };
 

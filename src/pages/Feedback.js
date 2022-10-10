@@ -1,33 +1,32 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import Header from '../components/Header';
-// import { connect } from 'react-redux';
-// import PropTypes from 'prop-types';
+
+const MINIMUN_ASSERTIONS = 3;
 
 class Feedback extends Component {
-//   state = {
-//     profileImg: '',
-//   };
-
   render() {
+    const { assertions } = this.props;
     return (
       <>
         <Header />
-        <p data-testid="feedback-text">FeedBack!</p>
+        {
+          (assertions < MINIMUN_ASSERTIONS)
+            ? (<h1 data-testid="feedback-text">Could be better...</h1>)
+            : (<h1 data-testid="feedback-text">Well Done!</h1>)
+        }
       </>
     );
   }
 }
 
-// const mapStateToProps = (state) => ({
-//   email: state.player.gravatarEmail,
-//   name: state.player.name,
-//   score: state.player.score,
-// });
+const mapStateToProps = (state) => ({
+  assertions: state.player.assertions,
+});
 
-// Header.propTypes = {
-//   email: PropTypes.string.isRequired,
-//   name: PropTypes.string.isRequired,
-//   score: PropTypes.number.isRequired,
-// };
+Feedback.propTypes = {
+  assertions: PropTypes.number.isRequired,
+};
 
-export default Feedback;
+export default connect(mapStateToProps)(Feedback);
