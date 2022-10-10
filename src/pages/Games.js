@@ -1,39 +1,49 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Header from '../components/Header';
 import trivia from '../trivia.png';
+import { addAssertion, addScore } from '../Redux/actions';
 
 const SECOND = 1000;
+const SCORE = 10;
+const EASY = 1;
+const MEDIUM = 2;
+const HARD = 3;
+const MAX_QUESTIONS = 4;
 
 class Games extends Component {
   state = {
+    index: 0,
     responseAPI: {},
     answers: [],
-    index: 0,
     correctAnswer: '',
     answered: false,
     timer: 30,
+    idInterval: 0,
   };
 
   componentDidMount() {
     this.getQuiz();
-    this.cronometro();
+    this.resetTimer();
   }
 
-  cronometro = () => {
-    this.setState({ timer: 30 }, () => {
-      const idInterval = setInterval(() => {
+  resetTimer = () => {
+    const { idInterval } = this.state;
+    if (idInterval) clearInterval(idInterval);
+    this.setState({ timer: 30, answered: false }, () => {
+      const thisIdInterval = setInterval(() => {
         this.setState((prevState) => ({
-          answered: false,
           timer: prevState.timer - 1,
         }), () => {
           const { timer } = this.state;
           if (timer === 0) {
-            clearInterval(idInterval);
+            clearInterval(thisIdInterval);
             this.setState({ answered: true });
           }
         });
       }, SECOND);
+      this.setState({ idInterval: thisIdInterval });
     });
   };
 
@@ -61,9 +71,33 @@ class Games extends Component {
     });
   };
 
-  handleAnswerButt = () => {
-    this.setState({ answered: true });
-    this.cronometro();
+  handleAnswerButt = (answer) => {
+    const { dispatch } = this.props;
+    const { correctAnswer, responseAPI, index, timer, idInterval } = this.state;
+    const { difficulty } = responseAPI[index];
+    const scoreValue = this.calculateScore(timer, difficulty);
+    this.setState({ answered: true }, () => {
+      clearInterval(idInterval);
+      if (answer === correctAnswer) {
+        dispatch(addScore(scoreValue));
+        dispatch(addAssertion());
+      }
+    });
+  };
+
+  calculateScore = (timer, difficulty) => {
+    if (difficulty === 'easy') return SCORE + (timer * EASY);
+    if (difficulty === 'medium') return SCORE + (timer * MEDIUM);
+    if (difficulty === 'hard') return SCORE + (timer * HARD);
+  };
+
+  handleNextButt = () => {
+    const { index } = this.state;
+    const { history } = this.props;
+    if (index === MAX_QUESTIONS) history.push('/feedback');
+    this.setState((prevState) => ({ index: prevState.index + 1 }), () => {
+      this.resetTimer();
+    });
   };
 
   render() {
@@ -79,33 +113,45 @@ class Games extends Component {
               <p data-testid="question-category">{responseAPI[index].category}</p>
               <p data-testid="question-text">{responseAPI[index].question}</p>
               { answered
-                ? answers.map((answer, i) => (
-                  <div key={ i } data-testid="answer-options">
+                ? (
+                  <>
+                    <div data-testid="answer-options">
+                      {answers.map((answer, i) => (
+                        <button
+                          key={ i }
+                          data-testid={ correctAnswer === answer
+                            ? 'correct-answer' : `wrong-answer-${i}` }
+                          type="button"
+                          className={ correctAnswer === answer
+                            ? 'correctanswer' : 'wronganswer' }
+                          disabled
+                        >
+                          { answer }
+                        </button>
+                      ))}
+                    </div>
                     <button
-                      data-testid={ correctAnswer === answer
-                        ? 'correct-answer' : `wrong-answer-${i}` }
                       type="button"
-                      onClick={ this.handleAnswerButt }
-                      className={ correctAnswer === answer
-                        ? 'correctanswer' : 'wronganswer' }
-                      disabled
+                      data-testid="btn-next"
+                      onClick={ this.handleNextButt }
                     >
-                      { answer }
+                      Next
                     </button>
-                  </div>
-                ))
-                : answers.map((answer, i) => (
-                  <div key={ i } data-testid="answer-options">
-                    <button
-                      data-testid={ correctAnswer === answer
-                        ? 'correct-answer' : `wrong-answer-${i}` }
-                      type="button"
-                      onClick={ this.handleAnswerButt }
-                    >
-                      { answer }
-                    </button>
-                  </div>
-                ))}
+                  </>)
+                : (
+                  <div data-testid="answer-options">
+                    {answers.map((answer, i) => (
+                      <button
+                        key={ i }
+                        data-testid={ correctAnswer === answer
+                          ? 'correct-answer' : `wrong-answer-${i}` }
+                        type="button"
+                        onClick={ () => this.handleAnswerButt(answer) }
+                      >
+                        { answer }
+                      </button>
+                    ))}
+                  </div>)}
             </div>
           )}
       </>
@@ -118,4 +164,4 @@ Games.propTypes = {
   push: PropTypes.func,
 }.isRequired;
 
-export default Games;
+export default connect()(Games);

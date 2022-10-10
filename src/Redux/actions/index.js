@@ -18,3 +18,10 @@ export const addScore = (payload) => ({
   type: ADD_SCORE,
   payload,
 });
+
+export const ADD_ASSERTION = 'ADD_ASSERTION';
+
+export const addAssertion = (payload) => ({
+  type: ADD_ASSERTION,
+  payload,
+});

@@ -1,4 +1,4 @@
-import { ADD_EMAIL, ADD_NAME } from '../actions';
+import { ADD_ASSERTION, ADD_EMAIL, ADD_NAME, ADD_SCORE } from '../actions';
 
 const INITIAL_STATE = {
   name: '', // nome - da - pessoa,
@@ -18,6 +18,16 @@ function player(state = INITIAL_STATE, action) {
     return {
       ...state,
       name: action.payload,
+    };
+  case ADD_SCORE:
+    return {
+      ...state,
+      score: state.score + action.payload,
+    };
+  case ADD_ASSERTION:
+    return {
+      ...state,
+      assertions: state.assertions + 1,
     };
   default:
     return state;
