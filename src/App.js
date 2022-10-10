@@ -4,6 +4,7 @@ import Feedback from './pages/Feedback';
 import Games from './pages/Games';
 import Login from './pages/Login';
 import Settings from './pages/Settings';
+import Ranking from './pages/Ranking';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route exact path="/feedback" component={ Feedback } />
         <Route exact path="/jogo" component={ Games } />
         <Route exact path="/" component={ Login } />
+        <Route exact path="/ranking" component={ Ranking } />
       </Switch>
     </div>
   );
