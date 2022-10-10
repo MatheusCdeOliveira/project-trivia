@@ -25,3 +25,10 @@ export const addAssertion = (payload) => ({
   type: ADD_ASSERTION,
   payload,
 });
+
+export const RESET_GAME = 'RESET_GAME';
+
+export const resetGame = (payload) => ({
+  type: RESET_GAME,
+  payload,
+});
