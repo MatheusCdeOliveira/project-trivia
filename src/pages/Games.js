@@ -87,9 +87,11 @@ class Games extends Component {
     if (difficulty === 'hard') return SCORE + (timer * HARD);
   };
 
-  // this.setState((prevState) => ({ index: prevState.index + 1 }), () => {
-  //   this.resetTimer();
-  // });
+  handleNextButt = () => {
+    this.setState((prevState) => ({ index: prevState.index + 1 }), () => {
+      this.resetTimer();
+    });
+  };
 
   render() {
     const { responseAPI, answers, index, correctAnswer, answered, timer } = this.state;
@@ -104,32 +106,45 @@ class Games extends Component {
               <p data-testid="question-category">{responseAPI[index].category}</p>
               <p data-testid="question-text">{responseAPI[index].question}</p>
               { answered
-                ? answers.map((answer, i) => (
-                  <div key={ i } data-testid="answer-options">
+                ? (
+                  <>
+                    <div data-testid="answer-options">
+                      {answers.map((answer, i) => (
+                        <button
+                          key={ i }
+                          data-testid={ correctAnswer === answer
+                            ? 'correct-answer' : `wrong-answer-${i}` }
+                          type="button"
+                          className={ correctAnswer === answer
+                            ? 'correctanswer' : 'wronganswer' }
+                          disabled
+                        >
+                          { answer }
+                        </button>
+                      ))}
+                    </div>
                     <button
-                      data-testid={ correctAnswer === answer
-                        ? 'correct-answer' : `wrong-answer-${i}` }
                       type="button"
-                      className={ correctAnswer === answer
-                        ? 'correctanswer' : 'wronganswer' }
-                      disabled
+                      data-testid="btn-next"
+                      onClick={ this.handleNextButt }
                     >
-                      { answer }
+                      Next
                     </button>
-                  </div>
-                ))
-                : answers.map((answer, i) => (
-                  <div key={ i } data-testid="answer-options">
-                    <button
-                      data-testid={ correctAnswer === answer
-                        ? 'correct-answer' : `wrong-answer-${i}` }
-                      type="button"
-                      onClick={ () => this.handleAnswerButt(answer) }
-                    >
-                      { answer }
-                    </button>
-                  </div>
-                ))}
+                  </>)
+                : (
+                  <div data-testid="answer-options">
+                    {answers.map((answer, i) => (
+                      <button
+                        key={ i }
+                        data-testid={ correctAnswer === answer
+                          ? 'correct-answer' : `wrong-answer-${i}` }
+                        type="button"
+                        onClick={ () => this.handleAnswerButt(answer) }
+                      >
+                        { answer }
+                      </button>
+                    ))}
+                  </div>)}
             </div>
           )}
       </>
