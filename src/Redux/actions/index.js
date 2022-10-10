@@ -32,3 +32,10 @@ export const resetGame = (payload) => ({
   type: RESET_GAME,
   payload,
 });
+
+export const GRAVATAR_IMG = 'GRAVATAR_IMG';
+
+export const getGravatarUrl = (url) => ({
+  type: GRAVATAR_IMG,
+  url,
+});
