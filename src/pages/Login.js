@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addEmail, addName, resetGame } from '../Redux/actions';
@@ -9,7 +8,6 @@ class Login extends Component {
     inputName: '',
     inputEmail: '',
     isDisabled: true,
-    redirect: false,
   };
 
   componentDidMount() {
@@ -37,13 +35,13 @@ class Login extends Component {
   };
 
   handleCLick = async () => {
-    const { dispatch } = this.props;
+    const { dispatch, history } = this.props;
     const { inputName, inputEmail } = this.state;
     dispatch(addEmail(inputEmail));
     dispatch(addName(inputName));
     const token = await this.getAPI();
     localStorage.setItem('token', token);
-    this.setState({ redirect: true });
+    history.push('/jogo');
   };
 
   handleSettings = () => {
@@ -52,10 +50,9 @@ class Login extends Component {
   };
 
   render() {
-    const { isDisabled, redirect, inputEmail, inputName } = this.state;
+    const { isDisabled, inputEmail, inputName } = this.state;
     return (
       <div>
-        {redirect && <Redirect to="/jogo" />}
         <form>
           <label htmlFor="email-input">
             Email:
