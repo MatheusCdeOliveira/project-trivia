@@ -32,7 +32,7 @@ class Ranking extends Component {
 
         </button>
         <section>
-          {ranking.map((element, index) => (
+          {ranking?.map((element, index) => (
             <div name={ element.score } key={ index }>
               <p data-testid={ `player-name-${index}` }>{element.name}</p>
               <p data-testid={ `player-score-${index}` }>{element.score}</p>

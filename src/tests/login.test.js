@@ -60,7 +60,7 @@ describe("Teste o componente <Login.js />.", () => {
   });
 
   test("Será validado se o fatch é chamado", async () => {
-    renderWithRouterAndRedux(<App />);
+    const { history } = renderWithRouterAndRedux(<App />);
 
     mock();
     const email = screen.getByTestId("input-gravatar-email");
@@ -72,8 +72,8 @@ describe("Teste o componente <Login.js />.", () => {
       userEvent.type(name, "Trybe");
       userEvent.click(btn);
     });
-
-    expect(history.location.pathname).tobe("/jogo");
+    await screen.findByTestId("question-text", {}, { timeout: 2000 });
+    expect(history.location.pathname).toBe("/jogo");
     expect(global.fetch).toBeCalled();
   });
 });
