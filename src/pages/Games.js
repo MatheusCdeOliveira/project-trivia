@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import Header from "../components/Header";
-import trivia from "../trivia.png";
-import { addAssertion, addScore } from "../Redux/actions";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import Header from '../components/Header';
+import trivia from '../trivia.png';
+import { addAssertion, addScore } from '../Redux/actions';
 
 const SECOND = 1000;
 const SCORE = 10;
@@ -17,7 +17,7 @@ class Games extends Component {
     index: 0,
     responseAPI: {},
     answers: [],
-    correctAnswer: "",
+    correctAnswer: '',
     answered: false,
     timer: 30,
   };
@@ -41,7 +41,7 @@ class Games extends Component {
               clearInterval(thisIdInterval);
               this.setState({ answered: true });
             }
-          }
+          },
         );
       }, SECOND);
       this.idInterval = thisIdInterval;
@@ -54,21 +54,21 @@ class Games extends Component {
     const incorrectAnswers = responseAPI[index].incorrect_answers;
     const POINT_FIVE = 0.5;
     const answers = [...incorrectAnswers, correctAnswer].sort(
-      () => POINT_FIVE - Math.random()
+      () => POINT_FIVE - Math.random(),
     );
     this.setState({ answers, correctAnswer });
   };
 
   getQuiz = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     const request = await fetch(
-      `https://opentdb.com/api.php?amount=5&token=${token}`
+      `https://opentdb.com/api.php?amount=5&token=${token}`,
     );
     const response = await request.json();
     if (response.response_code !== 0) {
       const { history } = this.props;
-      localStorage.removeItem("token");
-      history.push("/");
+      localStorage.removeItem('token');
+      history.push('/');
     }
     this.setState({ responseAPI: response.results }, () => {
       this.getAnswers();
@@ -90,31 +90,30 @@ class Games extends Component {
   };
 
   calculateScore = (timer, difficulty) => {
-    if (difficulty === "easy") return SCORE + timer * EASY;
-    if (difficulty === "medium") return SCORE + timer * MEDIUM;
-    if (difficulty === "hard") return SCORE + timer * HARD;
+    if (difficulty === 'easy') return SCORE + timer * EASY;
+    if (difficulty === 'medium') return SCORE + timer * MEDIUM;
+    if (difficulty === 'hard') return SCORE + timer * HARD;
   };
 
   handleNextButt = () => {
     const { index } = this.state;
     const { history } = this.props;
-    if (index === MAX_QUESTIONS) history.push("/feedback");
+    if (index === MAX_QUESTIONS) history.push('/feedback');
     this.setState(
       (prevState) => ({ index: prevState.index + 1 }),
       () => {
         this.resetTimer();
         this.getAnswers();
-      }
+      },
     );
   };
 
   render() {
-    const { responseAPI, answers, index, correctAnswer, answered, timer } =
-      this.state;
+    const { responseAPI, answers, index, correctAnswer, answered, timer } = this.state;
     return (
       <>
         <Header />
-        <img src={trivia} alt="header-Img" width="600" height="200" />
+        <img src={ trivia } alt="header-Img" width="600" height="200" />
         <p>{timer}</p>
         {responseAPI.length > 0 && (
           <div>
@@ -127,17 +126,17 @@ class Games extends Component {
                 <div data-testid="answer-options">
                   {answers.map((answer, i) => (
                     <button
-                      key={i}
+                      key={ i }
                       data-testid={
                         correctAnswer === answer
-                          ? "correct-answer"
+                          ? 'correct-answer'
                           : `wrong-answer-${i}`
                       }
                       type="button"
                       className={
                         correctAnswer === answer
-                          ? "correctanswer"
-                          : "wronganswer"
+                          ? 'correctanswer'
+                          : 'wronganswer'
                       }
                       disabled
                     >
@@ -148,7 +147,7 @@ class Games extends Component {
                 <button
                   type="button"
                   data-testid="btn-next"
-                  onClick={this.handleNextButt}
+                  onClick={ this.handleNextButt }
                 >
                   Next
                 </button>
@@ -157,14 +156,14 @@ class Games extends Component {
               <div data-testid="answer-options">
                 {answers.map((answer, i) => (
                   <button
-                    key={i}
+                    key={ i }
                     data-testid={
                       correctAnswer === answer
-                        ? "correct-answer"
+                        ? 'correct-answer'
                         : `wrong-answer-${i}`
                     }
                     type="button"
-                    onClick={() => this.handleAnswerButt(answer)}
+                    onClick={ () => this.handleAnswerButt(answer) }
                   >
                     {answer}
                   </button>

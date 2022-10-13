@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import md5 from "crypto-js/md5";
-import Header from "../components/Header";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import md5 from 'crypto-js/md5';
+import Header from '../components/Header';
 
 const MINIMUN_ASSERTIONS = 3;
 
@@ -15,12 +15,12 @@ class Feedback extends Component {
       score,
       picture: `https://www.gravatar.com/avatar/${hash}`,
     };
-    const getOldRank = JSON.parse(localStorage.getItem("ranking")) || [];
+    const getOldRank = JSON.parse(localStorage.getItem('ranking')) || [];
     localStorage.setItem(
-      "ranking",
-      JSON.stringify([...getOldRank, currentRanking])
+      'ranking',
+      JSON.stringify([...getOldRank, currentRanking]),
     );
-    history.push("/");
+    history.push('/');
   };
 
   showRanking = () => {
@@ -31,12 +31,12 @@ class Feedback extends Component {
       score,
       picture: `https://www.gravatar.com/avatar/${hash}`,
     };
-    const getOldRank = JSON.parse(localStorage.getItem("ranking")) || [];
+    const getOldRank = JSON.parse(localStorage.getItem('ranking')) || [];
     localStorage.setItem(
-      "ranking",
-      JSON.stringify([...getOldRank, currentRanking])
+      'ranking',
+      JSON.stringify([...getOldRank, currentRanking]),
     );
-    history.push("/ranking");
+    history.push('/ranking');
   };
 
   render() {
@@ -54,14 +54,14 @@ class Feedback extends Component {
         <button
           type="button"
           data-testid="btn-play-again"
-          onClick={this.resetAll}
+          onClick={ this.resetAll }
         >
           Play Again
         </button>
         <button
           type="button"
           data-testid="btn-ranking"
-          onClick={this.showRanking}
+          onClick={ this.showRanking }
         >
           Ranking
         </button>
