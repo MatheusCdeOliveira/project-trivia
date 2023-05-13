@@ -10,7 +10,6 @@ class Ranking extends Component {
   componentDidMount() {
     const ranking = JSON.parse(localStorage.getItem('ranking'));
     this.setState({ ranking });
-    console.log(ranking);
   }
 
   home = () => {

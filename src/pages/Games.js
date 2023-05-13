@@ -111,15 +111,15 @@ class Games extends Component {
   render() {
     const { responseAPI, answers, index, correctAnswer, answered, timer } = this.state;
     return (
-      <>
+      <section className="bg-gray-600 h-screen">
         <Header />
-        <img src={ trivia } alt="header-Img" width="600" height="200" />
-        <p>{timer}</p>
+        <img className="md:mx-auto md:p-10" src={ trivia } alt="header-Img" width="600" height="200" />
+        <p className="lg:text-5xl text-red-700">{timer}</p>
         {responseAPI.length > 0 && (
           <div>
-            <p data-testid="question-category">{responseAPI[index].category}</p>
+            <p data-testid="question-category" className="lg:text-2xl text-white">{responseAPI[index].category}</p>
             {responseAPI.length && (
-              <p data-testid="question-text">{responseAPI[index].question}</p>
+              <p data-testid="question-text" className="lg:text-xl text-green-600">{responseAPI[index].question}</p>
             )}
             {answered ? (
               <>
@@ -147,6 +147,7 @@ class Games extends Component {
                 <button
                   type="button"
                   data-testid="btn-next"
+                  className="text-white border-1 bg-black md:-mt-12 rounded-xl w-60"
                   onClick={ this.handleNextButt }
                 >
                   Next
@@ -172,7 +173,7 @@ class Games extends Component {
             )}
           </div>
         )}
-      </>
+      </section>
     );
   }
 }
