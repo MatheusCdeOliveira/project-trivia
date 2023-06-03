@@ -55,7 +55,7 @@ As seguintes ferramentas foram usadas na construção do projeto:
 <details>
   <summary><strong>🏪 O que foi desenvolvido</strong></summary><br />
 <h1 align="center">
-  <img alt="trivia" title="#trivia" src="./images/trybewarts.png" />
+  <img alt="trivia" title="#trivia" src="./public/trivia.jpeg" />
 </h1>
   
 </details>
